@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  fee-db:
+    image: mysql:8.0.33
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_USER: klinton
+      MYSQL_PASSWORD: klinton123
+      MYSQL_DATABASE: fee-db
+    ports:
+      - "3306:3306"
+    volumes:
+      - salessimulator:/var/lib/mysql
+#docker compose up
+#docker compose down -v
+volumes:
+  salessimulator:
