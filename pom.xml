@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.sales</groupId>
 	<artifactId>salesSimulator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>salesSimulator</name>
 	<description>Sales simulator project</description>
 	<url/>

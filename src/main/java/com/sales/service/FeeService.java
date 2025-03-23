@@ -3,11 +3,9 @@ package com.sales.service;
 import com.sales.domain.Fee;
 import com.sales.exception.NotFoundException;
 import com.sales.repository.FeeRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FeeService {
@@ -25,9 +23,9 @@ public class FeeService {
         return feeRepository.findById(id).orElseThrow(()->new NotFoundException("Fee not found"));
     }
 
-    public Fee save(Fee fee){
+    public void save(Fee fee){
         assertFeeExists(fee);
-        return feeRepository.save(fee);
+        feeRepository.save(fee);
     }
 
     public void delete(Long id){
@@ -42,6 +40,7 @@ public class FeeService {
     }
 
     private void assertFeeExists(Fee fee) {
-        findbyId(fee.getId());
+        if(fee.getId() != null)
+            findbyId(fee.getId());
     }
 }
