@@ -1,19 +1,27 @@
 package com.sales.service;
 
 import com.sales.domain.Fee;
+import com.sales.domain.OrderRecord;
 import com.sales.exception.NotFoundException;
 import com.sales.repository.FeeRepository;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class FeeService {
 
     private final FeeRepository feeRepository;
 
-    public FeeService(FeeRepository feeRepository) {
+    private final Random random = new Random();
+
+    private final KafkaTemplate<String, OrderRecord> kafkaTemplate;
+
+    public FeeService(FeeRepository feeRepository, KafkaTemplate<String, OrderRecord> kafkaTemplate) {
         this.feeRepository = feeRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public List<Fee> findAll(){
@@ -23,9 +31,12 @@ public class FeeService {
         return feeRepository.findById(id).orElseThrow(()->new NotFoundException("Fee not found"));
     }
 
+    @SuppressWarnings("null")
     public void save(Fee fee){
+        int partition = random.nextInt(2);
         assertFeeExists(fee);
         feeRepository.save(fee);
+        kafkaTemplate.send("fees-processeds", partition, null, new OrderRecord(fee.getId(), fee.getFeeCategory(), fee.getCardSchemaDescription(), fee.getFeePercent()));
     }
 
     public void delete(Long id){
